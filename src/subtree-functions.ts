@@ -40,6 +40,14 @@ export function demoteSubtree(textEditor: vscode.TextEditor, edit: vscode.TextEd
     }
 }
 
+export function moveSubtreeUp(textEditor: vscode.TextEditor, edit: vscode.TextEditorEdit) {
+
+}
+
+export function moveSubtreeDown(textEditor: vscode.TextEditor, edit: vscode.TextEditorEdit) {
+
+}
+
 export function moveSubtree(textEditor: vscode.TextEditor, edit: vscode.TextEditorEdit, direction: string) {
     const document = textEditor.document;
     const cursorPos = Utils.getCursorPosition();
