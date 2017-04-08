@@ -17,6 +17,14 @@ export function activate(context: vscode.ExtensionContext) {
     let promoteLineCmd = vscode.commands.registerTextEditorCommand('org.doPromote', HeaderFunctions.promoteLine);
     let promoteSubtreeCmd = vscode.commands.registerTextEditorCommand('org.promoteSubtree', SubtreeFunctions.promoteSubtree);
     let demoteSubtreeCmd = vscode.commands.registerTextEditorCommand('org.demoteSubtree', SubtreeFunctions.demoteSubtree);
+    let moveSubtreeUpCmd = vscode.commands.registerTextEditorCommand('org.moveSubtreeUp',
+            (textEditor: vscode.TextEditor, edit: vscode.TextEditorEdit) =>
+            SubtreeFunctions.moveSubtree(textEditor, edit, "UP")
+        );
+    let moveSubtreeDownCmd = vscode.commands.registerTextEditorCommand('org.moveSubtreeDown',
+        (textEditor: vscode.TextEditor, edit: vscode.TextEditorEdit) =>
+        SubtreeFunctions.moveSubtree(textEditor, edit, "DOWN")
+    );
 
     let insertTimestampCmd = vscode.commands.registerTextEditorCommand('org.timestamp', TimestampFunctions.insertTimestamp);
 
@@ -40,6 +48,9 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(promoteSubtreeCmd);
     context.subscriptions.push(demoteSubtreeCmd);
+
+    context.subscriptions.push(moveSubtreeUpCmd);
+    context.subscriptions.push(moveSubtreeDownCmd);
 
     context.subscriptions.push(insertTimestampCmd);
     context.subscriptions.push(incrementContextCmd);

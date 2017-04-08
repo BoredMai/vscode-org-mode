@@ -47,6 +47,14 @@
                 "title": "Org: Demote Subtree"
             },
             {
+                "command": "org.moveSubtreeUp",
+                "title": "Org: Move Subtree Up"
+            },
+            {
+                "command": "org.moveSubtreeDown",
+                "title": "Org: Move Subtree Down"
+            },
+            {
                 "command": "org.timestamp",
                 "title": "Org: Timestamp"
             },
