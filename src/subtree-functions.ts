@@ -39,3 +39,11 @@ export function demoteSubtree(textEditor: vscode.TextEditor, edit: vscode.TextEd
         }
     }
 }
+
+export function moveSubtreeUp(textEditor: vscode.TextEditor, edit: vscode.TextEditorEdit) {
+
+}
+
+export function moveSubtreeDown(textEditor: vscode.TextEditor, edit: vscode.TextEditorEdit) {
+
+}
