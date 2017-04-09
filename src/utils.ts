@@ -129,6 +129,32 @@ export function findEndOfContent(document: vscode.TextDocument, pos: vscode.Posi
     return curPos;
 }
 
+//TODO: write findEndOfSection
+export function findEndOfContent(document: vscode.TextDocument, pos: vscode.Position, levelSym: string = "") {
+    if(pos.line === document.lineCount - 1) {
+        return pos;
+    }
+    let sectionRegex = getSectionRegex(levelSym);
+    if(levelSym.startsWith("*")) {      //add an extra star so that content stops at next header of same level
+        let numStars = getStarPrefixCount(levelSym) + 1;
+        sectionRegex = new RegExp(`\\*{${numStars},}`);
+    }
+
+    let curLine = pos.line;
+    let curPos;
+    let curLinePrefix;
+
+    do {
+        curLine++;
+        curPos = new vscode.Position(curLine, 0);
+        curLinePrefix = getPrefix(getLine(document, curPos));
+    } while(curLine < document.lineCount-1 && inSubsection(curLinePrefix, sectionRegex))
+
+    curPos = new vscode.Position(curPos.line - 1, getLine(document, new vscode.Position(curPos.line - 1, 0)).length + 1);
+
+    return curPos;
+}
+
 export function inSubsection(linePrefix: string, sectionRegex: RegExp) {
     return (linePrefix.match(sectionRegex)) || linePrefix === "-" || !linePrefix || linePrefix.match(/\d+\./);
 }
