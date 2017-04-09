@@ -41,7 +41,22 @@ export function demoteSubtree(textEditor: vscode.TextEditor, edit: vscode.TextEd
 }
 
 export function moveSubtree(textEditor: vscode.TextEditor, edit: vscode.TextEditorEdit, direction: string) {
-    vscode.window.showInformationMessage(direction);
+    const document = textEditor.document;
+    const cursorPos = Utils.getCursorPosition();
+    const curLine = Utils.getLine(document, cursorPos);
+    const prefix = Utils.getPrefix(curLine);
+    const beginningOfSection = Utils.findBeginningOfSection(document, cursorPos, prefix);
+    const endOfSection = Utils.findEndOfSection(document, cursorPos, prefix);
+    const selectionRange = new vscode.Range(beginningOfSection, endOfSection);
+    const selectionContent = document.getText(selectionRange);
+    console.log(`${beginningOfSection.line}, ${endOfSection.line}`);
+    console.log(selectionContent);
+
+    // if(direction === "UP") {
+    //     // vscode.commands.executeCommand("editor.action.moveLinesUpAction");
+    // } else if(direction === "DOWN"){
+
+    // }
 }
 
 export function moveSubtreeUp(textEditor: vscode.TextEditor, edit: vscode.TextEditorEdit) {
