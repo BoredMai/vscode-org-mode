@@ -56,10 +56,10 @@ export function moveSubtree(textEditor: vscode.TextEditor, edit: vscode.TextEdit
         endOfSection = Utils.findEndOfSection(document, cursorPos, prefix);
     }
 
-    const subtreeRange = new vscode.Range(beginningOfSection, endOfSection);
+    const subtreeRange = findSubtreeRange(document, cursorPos, prefix);
     const subtreeContent = document.getText(subtreeRange);
-    // console.log(`${beginningOfSection.line}, ${endOfSection.line}`);
-    // console.log(subtreeContent);
+    console.log(`${subtreeRange.start}, ${subtreeRange.end.character}`);
+    console.log(subtreeContent);
     // if(direction === "UP") {
     //     const prevSubtreeRange =
     // } else if(direction === "DOWN"){
@@ -67,18 +67,20 @@ export function moveSubtree(textEditor: vscode.TextEditor, edit: vscode.TextEdit
     // }
 }
 
-// export function findSubtreeRange() {
-//     let beginningOfSection;
-//     let endOfSection;
+export function findSubtreeRange(document: vscode.TextDocument, pos: vscode.Position, prefix: string) {
+    let beginningOfSection;
+    let endOfSection;
 
-//     if(prefix.startsWith("*")) {    //if heading
-//         beginningOfSection = new vscode.Position(cursorPos.line, 0);
-//         endOfSection = Utils.findEndOfContent(document, cursorPos, prefix);
-//     } else {
-//         beginningOfSection = Utils.findBeginningOfSectionWithHeader(document, cursorPos, prefix);
-//         endOfSection = Utils.findEndOfSection(document, cursorPos, prefix);
-//     }
-// }
+    if(prefix.startsWith("*")) {    //if heading
+        beginningOfSection = new vscode.Position(pos.line, 0);
+        endOfSection = Utils.findEndOfContent(document, pos, prefix);
+    } else {
+        beginningOfSection = Utils.findBeginningOfSectionWithHeader(document, pos, prefix);
+        endOfSection = Utils.findEndOfSection(document, pos, prefix);
+    }
+
+    return new vscode.Range(beginningOfSection, endOfSection);
+}
 
 export function moveSubtreeUp(textEditor: vscode.TextEditor, edit: vscode.TextEditorEdit) {
 
