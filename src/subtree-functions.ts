@@ -45,19 +45,40 @@ export function moveSubtree(textEditor: vscode.TextEditor, edit: vscode.TextEdit
     const cursorPos = Utils.getCursorPosition();
     const curLine = Utils.getLine(document, cursorPos);
     const prefix = Utils.getPrefix(curLine);
-    const beginningOfSection = Utils.findBeginningOfSection(document, cursorPos, prefix);
-    const endOfSection = Utils.findEndOfSection(document, cursorPos, prefix);
-    const selectionRange = new vscode.Range(beginningOfSection, endOfSection);
-    const selectionContent = document.getText(selectionRange);
-    console.log(`${beginningOfSection.line}, ${endOfSection.line}`);
-    console.log(selectionContent);
+    let beginningOfSection;
+    let endOfSection;
 
+    if(prefix.startsWith("*")) {    //if heading
+        beginningOfSection = new vscode.Position(cursorPos.line, 0);
+        endOfSection = Utils.findEndOfContent(document, cursorPos, prefix);
+    } else {
+        beginningOfSection = Utils.findBeginningOfSectionWithHeader(document, cursorPos, prefix);
+        endOfSection = Utils.findEndOfSection(document, cursorPos, prefix);
+    }
+
+    const subtreeRange = new vscode.Range(beginningOfSection, endOfSection);
+    const subtreeContent = document.getText(subtreeRange);
+    // console.log(`${beginningOfSection.line}, ${endOfSection.line}`);
+    // console.log(subtreeContent);
     // if(direction === "UP") {
-    //     // vscode.commands.executeCommand("editor.action.moveLinesUpAction");
+    //     const prevSubtreeRange =
     // } else if(direction === "DOWN"){
 
     // }
 }
+
+// export function findSubtreeRange() {
+//     let beginningOfSection;
+//     let endOfSection;
+
+//     if(prefix.startsWith("*")) {    //if heading
+//         beginningOfSection = new vscode.Position(cursorPos.line, 0);
+//         endOfSection = Utils.findEndOfContent(document, cursorPos, prefix);
+//     } else {
+//         beginningOfSection = Utils.findBeginningOfSectionWithHeader(document, cursorPos, prefix);
+//         endOfSection = Utils.findEndOfSection(document, cursorPos, prefix);
+//     }
+// }
 
 export function moveSubtreeUp(textEditor: vscode.TextEditor, edit: vscode.TextEditorEdit) {
 
