@@ -45,33 +45,57 @@ export function moveSubtree(textEditor: vscode.TextEditor, edit: vscode.TextEdit
     const cursorPos = Utils.getCursorPosition();
     const curLine = Utils.getLine(document, cursorPos);
     const prefix = Utils.getPrefix(curLine);
-    let beginningOfSection;
-    let endOfSection;
-
-    if(prefix.startsWith("*")) {    //if heading
-        beginningOfSection = new vscode.Position(cursorPos.line, 0);
-        endOfSection = Utils.findEndOfContent(document, cursorPos, prefix);
-    } else {
-        beginningOfSection = Utils.findBeginningOfSectionWithHeader(document, cursorPos, prefix);
-        endOfSection = Utils.findEndOfSection(document, cursorPos, prefix);
-    }
 
     const subtreeRange = findSubtreeRange(document, cursorPos, prefix);
     const subtreeContent = document.getText(subtreeRange);
-    console.log(`${subtreeRange.start}, ${subtreeRange.end.character}`);
-    console.log(subtreeContent);
-    // if(direction === "UP") {
-    //     const prevSubtreeRange =
-    // } else if(direction === "DOWN"){
+    // console.log(`${subtreeRange.start.line}, ${subtreeRange.end.line}`);
+    // console.log(subtreeContent);
+    if(direction === "UP") {
+        const prevSubtreeRange = findPrevSubtreeRange(document, subtreeRange);
+        const prevSubtreeContent = document.getText(prevSubtreeRange);
+        console.log(`${prevSubtreeRange.start.line}, ${prevSubtreeRange.end.line}`);
+        console.log(prevSubtreeContent);
+    } else if(direction === "DOWN"){
+        const nextSubtreeRange = findNextSubtreeRange(document, subtreeRange);
+        const nextSubtreeContent = document.getText(nextSubtreeRange);
+        console.log(`${nextSubtreeRange.start.line}, ${nextSubtreeRange.end.line}`);
+        console.log(nextSubtreeContent);
+    }
+}
 
-    // }
+export function findPrevSubtreeRange(document: vscode.TextDocument, curSubtree: vscode.Range) {
+        if(curSubtree.start.line - 1 < 0) {
+            return null;
+        }
+        const prevSubtreePos = new vscode.Position(curSubtree.start.line - 1, 0);
+        const prevSubtreeLine = Utils.getLine(document, prevSubtreePos);
+        const prefix = Utils.getPrefix(prevSubtreeLine);
+
+        const prevSubtreeStart = Utils.findBeginningOfSectionWithHeader(document, prevSubtreePos, prefix);
+        const prevSubtreeEnd = new vscode.Position(prevSubtreePos.line, prevSubtreeLine.length + 1);
+
+        return new vscode.Range(prevSubtreeStart, prevSubtreeEnd);
+}
+
+export function findNextSubtreeRange(document: vscode.TextDocument, curSubtree: vscode.Range) {
+        if(curSubtree.start.line + 1 > document.lineCount - 1) {
+            return null;
+        }
+        const prevSubtreePos = new vscode.Position(curSubtree.start.line + 1, 0);
+        const prevSubtreeLine = Utils.getLine(document, prevSubtreePos);
+        const prefix = Utils.getPrefix(prevSubtreeLine);
+
+        const prevSubtreeStart = Utils.findBeginningOfSectionWithHeader(document, prevSubtreePos, prefix);
+        const prevSubtreeEnd = new vscode.Position(prevSubtreePos.line, prevSubtreeLine.length + 1);
+
+        return new vscode.Range(prevSubtreeStart, prevSubtreeEnd);
 }
 
 export function findSubtreeRange(document: vscode.TextDocument, pos: vscode.Position, prefix: string) {
     let beginningOfSection;
     let endOfSection;
 
-    if(prefix.startsWith("*")) {    //if heading
+    if(prefix.startsWith("*")) {    //if heading, loose check
         beginningOfSection = new vscode.Position(pos.line, 0);
         endOfSection = Utils.findEndOfContent(document, pos, prefix);
     } else {
