@@ -50,11 +50,17 @@ export function moveSubtree(textEditor: vscode.TextEditor, edit: vscode.TextEdit
     const subtreeContent = document.getText(subtreeRange);
     // console.log(`${subtreeRange.start.line}, ${subtreeRange.end.line}`);
     // console.log(subtreeContent);
+    // console.log("----");
     if(direction === "UP") {
         const prevSubtreeRange = findPrevSubtreeRange(document, subtreeRange);
         const prevSubtreeContent = document.getText(prevSubtreeRange);
-        console.log(`${prevSubtreeRange.start.line}, ${prevSubtreeRange.end.line}`);
-        console.log(prevSubtreeContent);
+        edit.delete(prevSubtreeRange)
+        edit.insert(prevSubtreeRange.start, subtreeContent);
+        edit.delete(subtreeRange)
+        edit.insert(subtreeRange.start, prevSubtreeContent);
+        textEditor.selections = [new vscode.Selection(prevSubtreeRange.start, prevSubtreeRange.start)];
+        // console.log(`${prevSubtreeRange.start.line}, ${prevSubtreeRange.end.line}`);
+        // console.log(prevSubtreeContent);
     } else if(direction === "DOWN"){
         const nextSubtreeRange = findNextSubtreeRange(document, subtreeRange);
         const nextSubtreeContent = document.getText(nextSubtreeRange);

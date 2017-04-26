@@ -79,7 +79,7 @@ export function findBeginningOfSection(document: vscode.TextDocument, pos: vscod
 
 export function findEndOfSection(document: vscode.TextDocument, pos: vscode.Position, levelSym: string = "") {
     if(pos.line === document.lineCount - 1) {
-        return pos;
+        return new vscode.Position(pos.line, getLine(document, new vscode.Position(pos.line, 0)).length + 1);
     }
     let sectionRegex = getSectionRegex(levelSym);
 
